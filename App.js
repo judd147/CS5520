@@ -1,44 +1,64 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import Header from './components/Header'
-import Input from './components/Input'
-import React, { useState } from 'react'
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  View,
+  Button,
+  SafeAreaView,
+  FlatList,
+} from "react-native";
+import Header from "./components/Header";
+import { useState } from "react";
+import Input from "./components/Input";
+import GoalItem from "./components/GoalItem"
 
 export default function App() {
-  const appName = 'Demo App';
-  const [text, setText] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
+  const appName = "My awesome app";
+  //const [text, setText] = useState("");
+  const [goals, setGoals] = useState([{}]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  function inputHandler(data) {
-    console.log("You typed:", data);
-    setText(data);
-    setModalVisible(false);
+  function receiveInput(data) {
+    console.log("recieve input ", data);
+    const newGoal = {text: data, id: Math.random()}
+    setGoals([...goals, newGoal]);
+    setIsModalVisible(false);
   }
-
-  function showModal() {
-    setModalVisible(true);
+  function dismissModal() {
+    setIsModalVisible(false);
   }
-
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Header name={appName} version={2}/>
-      <Button title='Add a Goal' onPress={showModal}/>
-      <Input inputHandler={inputHandler} modalVisible={modalVisible}/>
-      <Text>{text}</Text>
-    </View>
-    // handleTextChange takes in an onChangeText behind the scenes and we call setText to update the text state
+    <SafeAreaView style={styles.container}>
+      <View style={styles.topView}>
+        <StatusBar style="auto" />
+
+        <Header name={appName} version={2} />
+        <Button title="Add a goal" onPress={() => setIsModalVisible(true)} />
+        <Input
+          inputHandler={receiveInput}
+          modalVisible={isModalVisible}
+          dismissModal={dismissModal}
+        />
+      </View>
+      <View style={styles.bottomView}>
+        <FlatList
+          data={goals} renderItem={({ item }) =>
+          <GoalItem item={item}/> } />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "white",
+    // alignItems: "center",
+    justifyContent: "center",
   },
-  input: {
-
-  }
+  topView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  bottomView: { flex: 4, backgroundColor: "lightpink" },
 });
