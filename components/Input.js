@@ -3,6 +3,7 @@ import {
   Image,
   Modal,
   StyleSheet,
+  Text,
   TextInput,
   View,
 } from "react-native";
@@ -12,18 +13,20 @@ export default function Input({ inputHandler, modalVisible, dismissModal }) {
   const [text, setText] = useState("");
   // callback handler
   function changeTextHandler(changedText) {
-    console.log("user is typing ", changedText);
+    // console.log("user is typing ", changedText);
+
     setText(changedText);
   }
 
   function confirmHandler() {
     inputHandler(text);
-    setText("")
+    setText("");
   }
   function cancelHandler() {
+    setText("");
+
     // hide the modal
     dismissModal();
-    setText("");
   }
   return (
     <Modal visible={modalVisible}>
@@ -46,7 +49,7 @@ export default function Input({ inputHandler, modalVisible, dismissModal }) {
             <Button title="Cancel" onPress={cancelHandler} />
           </View>
           <View style={styles.buttonView}>
-            <Button title="Confirm" onPress={confirmHandler} />
+            <Button title="Confirm" onPress={confirmHandler} disabled={!text} />
           </View>
         </View>
       </View>
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#ccc",
+    backgroundColor: "#999",
     alignItems: "center",
     justifyContent: "center",
   },
